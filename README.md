@@ -35,6 +35,6 @@ pip install -r requirements.txt
 6. Run application file
 
 ``` bash
-python src/app.py   # ...or alternatively: python wsgi.py
+python wsgi.py
 ```
 
