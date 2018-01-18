@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+{% if product %}
+
+<div class="page-header">
+    <h2>{{product.name}}</h2>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Description</label>
+            <p>{{product.description}}</p>
+        </div>
+        <div class="col-sm-4">
+            <label>Price</label>
+            <p style="font-size: 200%;">{{product.price}}€</p>
+
+            <label>Amount in stock</label>
+            <p>{{product.stock_left}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <label>Ordering details</label>
+            <p>Delivery time can't be estimated at the moment, please call us at +999(0)1234567890 for an estimate.</p>
+        </div>
+        <div class="col-sm-4">
+            <label>Purchase</label>
+            <div class="input-group">
+                <input class="form-control" type="text" placeholder="Amount">
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" type="button">Confirm</button>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="alert alert-danger">
+    Product not found.
+</div>
+
+{% endif %}
+
+
+{% endblock %}
