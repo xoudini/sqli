@@ -2,6 +2,70 @@
 
 {% block body %}
 
-<p>Up and running.</p>
+<div class="page-header">
+    <h2>Legit Shop</h2>
+</div>
+
+<form action="/products" method="GET">
+    <label>Search</label>
+    <div class="input-group">
+        <input class="form-control" type="text" name="search" value="{% if keyword %}{{keyword}}{% endif %}">
+        <span class="input-group-btn">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </span>
+    </div>
+</form>
+
+<br/>
+
+{% if products %}
+
+    {% if count %}
+
+    <div>
+        <i>{{count}} match{% if count != 1 %}es{% endif %} found.</i>
+    </div>
+
+    <br/>
+
+    {% endif %}
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Stock</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for product in products %}
+            <tr>
+                <td>
+                    <div>
+                        <h4>
+                            <a href="/products/{{product.uid}}">{{product.name}}</a>
+                        </h4>
+                        <p>{{product.description}}</p>
+                    </div>
+                </td>
+                <td>
+                    <p>{{product.stock_left}}</p>
+                </td>
+                <td>
+                    <p>{{product.price}}€</p>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+
+<div class="alert alert-info">
+    No products found.
+</div>
+
+{% endif %}
 
 {% endblock %}
