@@ -1,12 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session, abort
 
 from src.utilities.database import Database
+from src.utilities.password import PasswordUtility
 from src.models.product import Product
 from src.models.account import Account
 
 app = Flask(__name__)
 app.secret_key = "legit-secret-key"
 db = Database('legit')
+pw = PasswordUtility()
 
 
 ### Convenience methods for session. ###
@@ -35,10 +37,10 @@ def index():
 @app.route('/products')
 def products():
     keyword = request.args.get('search', '')
-    keyword = keyword.strip().lower()
+    keyword = keyword.strip()
 
     rows = db.execute_query(
-        "SELECT * FROM Product WHERE lower(name) LIKE ('%" + keyword + "%') ORDER BY lower(name);"
+        "SELECT * FROM Product WHERE lower(name) LIKE lower('%" + keyword + "%') ORDER BY lower(name);"
     )
 
     products = []
@@ -89,15 +91,26 @@ def login():
     else:
         username, password = request.form['username'], request.form['password']
 
+        username = username.strip().lower()
+
         rows = db.execute_query(
-            "SELECT * FROM Account WHERE username = ('" + username + "') AND password = ('" + password + "');"
+            "SELECT * FROM Account WHERE username = %(username)s;",
+            {'username': username}
         )
 
         try:
             row = rows.pop(0)
-            account = Account(row[0], row[1], row[2], row[3])
-            set_signed_in(account.username, account.email, account.password, account.admin)
-            return redirect(url_for('account'))
+
+            stored_hash = row[2]
+
+            if pw.matches(password, stored_hash):
+                account = Account(row[0], row[1], row[2], row[3])
+                set_signed_in(account.username, account.email, account.password, account.admin)
+                return redirect(url_for('account'))
+
+            else:
+                error = "Incorrect username or password."
+                return render_template('login.html', messages={'error': error}, username=username)    
 
         except Exception as e:
             error = "Incorrect username or password."

@@ -1,6 +1,6 @@
-INSERT INTO Account (username, email, password, admin) VALUES ('admin', 'admin@example.com', 'supersecret', TRUE);
-INSERT INTO Account (username, email, password, admin) VALUES ('matti', 'matti@example.com', 'AzPNgi4HhP3e', FALSE);
-INSERT INTO Account (username, email, password, admin) VALUES ('teppo', 'teppo@example.com', 'hYNs6fv0pjBm', FALSE);
+INSERT INTO Account (username, email, password, admin) VALUES ('admin', 'admin@example.com', '$2b$12$90f1F3ZEdiKIuK2o4EO6veEepPdK5vNxn/WuTHjlT2jVoYbQS6qhy', TRUE);
+INSERT INTO Account (username, email, password, admin) VALUES ('matti', 'matti@example.com', '$2b$12$jmPl3txW68mes9GWdr8SI.cAkM6kNWQx8j2dBMeq8T.CnrD27dZtW', FALSE);
+INSERT INTO Account (username, email, password, admin) VALUES ('teppo', 'teppo@example.com', '$2b$12$XNNkPccM.idJIRcU1DQlK.PBq/hvldkGfmOQRJS2xP4K3kUqB1zl6', FALSE);
 
 INSERT INTO Product (name, description, price, stock_left) VALUES ('Canon EF 50mm f/1.4 USM', 'Objektiivissä on USM eli ultraäänimoottori, joka tarkentaa nopeasti ja lähes äänettömästi. Kestävä rakenne ja tarkka piirto. Valovoimansa ansiosta tämä objektiivi soveltuu hyvin henkilökuvaukseen tai muihin tilanteisiin, joissa kohde halutaan tuoda kuvasta mahdollisimman selkeästi esille.', 399.90, 2);
 INSERT INTO Product (name, description, price, stock_left) VALUES ('Yongnuo EF YN 50 mm 1.8', 'Valovoimainen normaaliobjektiivi Canon EF -bajonettiin. Yhteensopiva sekä täyden kennon että APS-C -kennon kameroiden kanssa. Objektiivi tukee kaikkia kameran toimintoja, kuten automaattitarkennusta ja automaattivalotusta. Monikalvopinnoitetus parantaa valonläpäisyä ja vähentää heijastumia.', 89.90, 1);
