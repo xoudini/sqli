@@ -1,10 +1,31 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, abort
 
 from src.utilities.database import Database
 from src.models.product import Product
+from src.models.account import Account
 
 app = Flask(__name__)
+app.secret_key = "legit-secret-key"
 db = Database('legit')
+
+
+### Convenience methods for session. ###
+
+def signed_in():
+    return session['signed_in'] if 'signed_in' in session else False
+
+def admin_session() -> bool:
+    return session['admin'] if 'admin' in session else False
+
+def set_signed_in(username, password, admin):
+    session['signed_in'] = True
+    session['fresh'] = True
+    session['username'] = username
+    session['password'] = password
+    session['admin'] = admin
+
+
+### Routes. ###
 
 @app.route('/')
 def index():
@@ -15,10 +36,8 @@ def products():
     keyword = request.args.get('search', '')
     keyword = keyword.strip().lower()
 
-    print("Keyword:", keyword)
-
     rows = db.execute_query(
-        "SELECT * FROM Product WHERE lower(name) LIKE ('%" + keyword + "%') ORDER BY name;"
+        "SELECT * FROM Product WHERE lower(name) LIKE ('%" + keyword + "%') ORDER BY lower(name);"
     )
 
     products = []
@@ -47,6 +66,68 @@ def product(uid):
 
     except Exception as e:
         return "ERROR: " + str(e)
+
+@app.route('/products/<uid>/delete', methods=['POST'])
+def delete_product(uid):
+    if not admin_session():
+        abort(403)
+    
+    db.execute_update(
+        "DELETE FROM Product WHERE id = (" + uid + ");"
+    )
+
+    return redirect(url_for('products'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if signed_in():
+        return redirect(url_for('account'))
+
+    if request.method == 'GET':
+        return render_template('login.html', messages=None)
+    else:
+        username, password = request.form['username'], request.form['password']
+
+        rows = db.execute_query(
+            "SELECT * FROM Account WHERE username = ('" + username + "') AND password = ('" + password + "');"
+        )
+
+        try:
+            row = rows.pop(0)
+            account = Account(row[0], row[1], row[2])
+            set_signed_in(account.username, account.password, account.admin)
+            return redirect(url_for('account'))
+
+        except Exception as e:
+            error = "Incorrect username or password."
+            return render_template('login.html', messages={'error': error}, username=username)
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    if not signed_in():
+        abort(401)
+    
+    session.pop('signed_in', None)
+    session.pop('fresh', None)
+    session.pop('username', None)
+    session.pop('password', None)
+    session.pop('admin', None)
+
+    return redirect(url_for('login'))
+
+@app.route('/account')
+def account():
+    # account = Account(session['username'], session['password'], session['admin']) if signed_in() else None
+    account = None
+    messages = None
+
+    if all(key in session for key in ('username', 'password', 'admin')):
+        account = Account(session['username'], session['password'], session['admin'])
+
+    if 'fresh' in session:
+        messages = {'welcome': "Welcome!"}
+    
+    return render_template('account.html', account=account, messages=messages)
 
 
 ### Entry point.
