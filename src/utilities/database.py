@@ -32,3 +32,11 @@ class Database:
         except Exception as e:
             print(e)
     
+    def execute_update(self, sql: str):
+        try:
+            with pg.connect(dsn=self.dsn) as connection:
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)
+
+        except Exception as e:
+            print(e)
