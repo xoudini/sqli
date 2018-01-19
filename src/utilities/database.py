@@ -22,11 +22,15 @@ class Database:
         
         self.dsn = " ".join(paramlist)
 
-    def execute_query(self, sql: str):
+    def execute_query(self, sql: str, mapping = None):
         try:
             with pg.connect(dsn=self.dsn) as connection:
                 with connection.cursor() as cursor:
-                    cursor.execute(sql)
+                    if mapping is None:
+                        cursor.execute(sql)
+                    else:
+                        cursor.execute(sql, mapping)
+                    
                     return cursor.fetchall()
 
         except Exception as e:
