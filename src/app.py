@@ -17,10 +17,11 @@ def signed_in():
 def admin_session() -> bool:
     return session['admin'] if 'admin' in session else False
 
-def set_signed_in(username, password, admin):
+def set_signed_in(username, email, password, admin):
     session['signed_in'] = True
     session['fresh'] = True
     session['username'] = username
+    session['email'] = email
     session['password'] = password
     session['admin'] = admin
 
@@ -94,8 +95,8 @@ def login():
 
         try:
             row = rows.pop(0)
-            account = Account(row[0], row[1], row[2])
-            set_signed_in(account.username, account.password, account.admin)
+            account = Account(row[0], row[1], row[2], row[3])
+            set_signed_in(account.username, account.email, account.password, account.admin)
             return redirect(url_for('account'))
 
         except Exception as e:
@@ -110,6 +111,7 @@ def logout():
     session.pop('signed_in', None)
     session.pop('fresh', None)
     session.pop('username', None)
+    session.pop('email', None)
     session.pop('password', None)
     session.pop('admin', None)
 
@@ -121,8 +123,8 @@ def account():
     account = None
     messages = None
 
-    if all(key in session for key in ('username', 'password', 'admin')):
-        account = Account(session['username'], session['password'], session['admin'])
+    if all(key in session for key in ('username', 'email', 'password', 'admin')):
+        account = Account(session['username'], session['email'], session['password'], session['admin'])
 
     if 'fresh' in session:
         messages = {'welcome': "Welcome!"}

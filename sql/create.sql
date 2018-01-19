@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS Account (
     username TEXT PRIMARY KEY,
+    email TEXT,
     password TEXT NOT NULL,
     admin BOOLEAN NOT NULL
 );
