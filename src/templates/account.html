@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<div class="page-header">
+    <h1>Account</h1>
+</div>
+
+{% if account and session['signed_in'] %}
+
+    {% if messages and messages['welcome'] %}
+    <div class="alert alert-success">
+        {{messages['welcome']}}
+    </div>
+    {% endif %}
+
+    <form action="/logout" method="POST">
+        <div class="form-group">
+            <label>Username</label>
+            <p>{{account.username}}</p>
+
+            <label>Password</label>
+            <p>{{account.password}}</p>
+
+            <label>Superuser</label>
+            <p>{{account.admin}}</p>
+        </div>
+
+        <button class="btn btn-danger" type="submit">Sign out</button>
+    </form>
+
+{% else %}
+
+<div class="alert alert-danger">
+    Not signed in.
+</div>
+
+{% endif %}
+
+{% endblock %}
