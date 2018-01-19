@@ -36,6 +36,9 @@
             <th>Product</th>
             <th>Stock</th>
             <th>Price</th>
+            {% if session['admin'] %}
+            <th>Actions</th>
+            {% endif %}
         </tr>
     </thead>
     <tbody>
@@ -55,6 +58,13 @@
                 <td>
                     <p>{{product.price}}€</p>
                 </td>
+                {% if session['admin'] %}
+                <td>
+                    <form action="/products/{{product.uid}}/delete" method="POST">
+                        <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+                    </form>
+                </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </tbody>
