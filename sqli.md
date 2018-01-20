@@ -33,6 +33,10 @@ table_schema, table_name [...] FROM information_schema.tables;--
 -- List columns in specific table (table_name found from previous result, e.g. account):
 column_name [...] FROM information_schema.columns WHERE table_name = 'account';--
 
+-- Or with more data, e.g.:
+column_name, data_type, ordinal_position ...
+
+
 -- Query from table, now knowing the columns (e.g. account):
 SELECT 1, 2, * FROM account;--
 
